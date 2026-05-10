@@ -21,7 +21,7 @@ export default function SideBar({ setSelectedUser }) {
                     className="text-xl font-bold text-gray-400"
                     onClick={() => setSelectedUser(null)}
                 >
-                    Chats
+                    Toko Chat
                 </h2>
             </div>
 
