@@ -19,7 +19,8 @@ export default function Login() {
     }, [isLogin])
 
     function handleLogin() {
-        dispatch(saveUserData(name))
+        if (!name.trim()) return
+        dispatch(saveUserData(name.trim()))
     }
 
     return (

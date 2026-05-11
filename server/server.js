@@ -20,6 +20,7 @@ const io = new Server(server, {
 
 initializeSocket(io)
 
+
 server.listen(process.env.PORT, (err) => {
     if (err) {
         console.log('Error in starting server')
