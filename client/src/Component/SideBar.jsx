@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import socket from "../Context/socket";
 import { MoreVertical } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { clearUserData } from "../Redux/Features/userSlice";
 
 export default function SideBar({ setSelectedUser, unRead }) {
     const [users, setUsers] = useState([]);
+    const [menuOpen, setMenuOpen] = useState(false)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         socket.emit("users:get");
@@ -39,6 +43,14 @@ export default function SideBar({ setSelectedUser, unRead }) {
         return date.toLocaleDateString();
     };
 
+    function toggleMenu() {
+        setMenuOpen(!menuOpen)
+    }
+
+    function handleLogOut() { 
+        dispatch(clearUserData())
+    }
+
     return (
         <div className="w-72 h-full border-r border-gray-300 flex flex-col">
             {/* Header */}
@@ -50,9 +62,14 @@ export default function SideBar({ setSelectedUser, unRead }) {
                     TokoChat
                 </div>
 
-                <button className=" cursor-pointer">
-                    <MoreVertical />
-                </button>
+                <div className="relative flex justify-center items-center select-none">
+                    <button onClick={toggleMenu} className=" cursor-pointer">
+                        <MoreVertical />
+                    </button>
+                    <button onClick={handleLogOut} className={`absolute right-0 top-10 p-2 text-nowrap text-white bg-gray-700 border rounded-md ${menuOpen ? 'block' : 'hidden'} `}>
+                        Logout
+                    </button>
+                </div>
             </div>
 
             {/* Users List */}

@@ -63,6 +63,7 @@ export default function Chat() {
             />
             <ChatWindow
                 selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
                 chatHistory={chatHistory}
                 setUnRead={setUnRead}
             />

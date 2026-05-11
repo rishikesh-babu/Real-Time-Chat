@@ -1,25 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import socket from "../Context/socket";
+import { MoreVertical } from "lucide-react";
 
-export default function ChatWindow({ selectedUser, chatHistory, setUnRead }) {
+export default function ChatWindow({ selectedUser, setSelectedUser, chatHistory, setUnRead }) {
     const [message, setMessage] = useState('');
     const inputRef = useRef()
     const bottomScrollRef = useRef(null)
+    const [menuOpen, setMenuOpen] = useState(false)
 
-    useEffect(() => { 
+    useEffect(() => {
         inputRef.current?.focus()
     }, [selectedUser]);
 
     useEffect(() => {
         setUnRead((prev) => {
-            const updated = {...prev}
+            const updated = { ...prev }
             delete updated[selectedUser?.socketId]
             return updated
         })
     }, [selectedUser, chatHistory])
 
     useEffect(() => {
-        bottomScrollRef.current?.scrollIntoView({ behavior: 'smooth'})
+        bottomScrollRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [chatHistory])
 
     function handleSendMessage(event) {
@@ -35,6 +37,15 @@ export default function ChatWindow({ selectedUser, chatHistory, setUnRead }) {
         setMessage('')
     }
 
+    function toggleMenu() {
+        setMenuOpen(!menuOpen)
+    }
+
+    function toggleChatWindow() {
+        setMenuOpen(false)
+        setSelectedUser(null)
+    }
+
     if (!selectedUser) {
         return (
             <div className="flex-1 flex items-center justify-center text-gray-500 text-xl">
@@ -46,11 +57,23 @@ export default function ChatWindow({ selectedUser, chatHistory, setUnRead }) {
     return (
         <div className="flex-1 flex flex-col ">
             {/* Chat Header */}
-            <div className="p-4 border-b flex items-center gap-3 ">
-                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                    {selectedUser.name.charAt(0).toUpperCase()}
+            <div className="p-4 border-b flex justify-between">
+                <div className="flex items-center gap-3 ">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                        {selectedUser.name.charAt(0).toUpperCase()}
+                    </div>
+                    <h2 className="font-bold text-lg">{selectedUser.name}</h2>
                 </div>
-                <h2 className="font-bold text-lg">{selectedUser.name}</h2>
+
+                <div className="relative flex justify-center items-center ">
+                    <button onClick={toggleMenu} className=" select-none cursor-pointer">
+                        <MoreVertical />
+                    </button>
+
+                    <button onClick={toggleChatWindow} className={`absolute right-0 top-10 p-2 text-nowrap text-white bg-gray-700 border rounded-md ${menuOpen ? '' : 'hidden'} `}>
+                        Close Chat
+                    </button>
+                </div>
             </div>
 
             {/* Messages Area */}
