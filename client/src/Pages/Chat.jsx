@@ -9,6 +9,7 @@ export default function Chat() {
     const [selectedUser, setSelectedUser] = useState(null)
     const [chatHistory, setChatHistory] = useState([])
     const { isLogin, name } = useSelector(state => state.user);
+    const [unRead, setUnRead] = useState({})
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -33,6 +34,17 @@ export default function Chat() {
                 ...prev,
                 data
             ]))
+
+            setUnRead((prev) => {
+                const from = data.from
+                return {
+                    ...prev,
+                    [from]: {
+                        count: (prev[from]?.count || 0) + 1,
+                        time: data.time
+                    }
+                }
+            })
         })
 
         return () => {
@@ -45,10 +57,14 @@ export default function Chat() {
 
     return (
         <div className='h-full flex '>
-            <SideBar setSelectedUser={setSelectedUser} />
+            <SideBar
+                setSelectedUser={setSelectedUser}
+                unRead={unRead}
+            />
             <ChatWindow
                 selectedUser={selectedUser}
                 chatHistory={chatHistory}
+                setUnRead={setUnRead}
             />
         </div>
     )

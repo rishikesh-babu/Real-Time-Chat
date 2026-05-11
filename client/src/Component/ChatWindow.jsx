@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import socket from "../Context/socket";
 
-export default function ChatWindow({ selectedUser, chatHistory }) {
+export default function ChatWindow({ selectedUser, chatHistory, setUnRead }) {
     const [message, setMessage] = useState('');
     const inputRef = useRef()
     const bottomScrollRef = useRef(null)
@@ -9,6 +9,14 @@ export default function ChatWindow({ selectedUser, chatHistory }) {
     useEffect(() => { 
         inputRef.current?.focus()
     }, [selectedUser]);
+
+    useEffect(() => {
+        setUnRead((prev) => {
+            const updated = {...prev}
+            delete updated[selectedUser?.socketId]
+            return updated
+        })
+    }, [selectedUser, chatHistory])
 
     useEffect(() => {
         bottomScrollRef.current?.scrollIntoView({ behavior: 'smooth'})
@@ -23,7 +31,8 @@ export default function ChatWindow({ selectedUser, chatHistory }) {
             message
         })
 
-        event.target.value = ''
+        inputRef.current.value = ''
+        setMessage('')
     }
 
     if (!selectedUser) {
@@ -78,7 +87,7 @@ export default function ChatWindow({ selectedUser, chatHistory }) {
                     onChange={(event) => setMessage(event.target.value)}
                     onKeyDown={(event) => event.key === "Enter" && handleSendMessage(event)}
                 />
-                <button className="btn btn-info" onClick={() => handleSendMessage()}>
+                <button className="btn btn-info" onClick={(event) => handleSendMessage(event)}>
                     Send
                 </button>
             </div>
