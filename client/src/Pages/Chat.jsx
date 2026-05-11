@@ -52,21 +52,28 @@ export default function Chat() {
         }
     }, [])
 
-
-    console.log('chatHistory :>> ', chatHistory);
-
     return (
-        <div className='h-full flex '>
-            <SideBar
-                setSelectedUser={setSelectedUser}
-                unRead={unRead}
-            />
-            <ChatWindow
-                selectedUser={selectedUser}
-                setSelectedUser={setSelectedUser}
-                chatHistory={chatHistory}
-                setUnRead={setUnRead}
-            />
+        <div className="h-full flex items-center justify-center bg-[#0f1115] overflow-hidden">
+            {/* Main Chat Container */}
+            <div className="relative w-full h-full max-w-[1600px] flex overflow-hidden glassmorphism-dark animate-fade-in shadow-2xl">
+                {/* Sidebar - hidden on mobile when a user is selected */}
+                <div className={`${selectedUser ? 'hidden md:flex' : 'flex'} w-full md:w-80 h-full border-r border-white/10`}>
+                    <SideBar
+                        setSelectedUser={setSelectedUser}
+                        unRead={unRead}
+                    />
+                </div>
+
+                {/* Chat Window - hidden on mobile when no user is selected */}
+                <div className={`${selectedUser ? 'flex' : 'hidden md:flex'} flex-1 h-full`}>
+                    <ChatWindow
+                        selectedUser={selectedUser}
+                        setSelectedUser={setSelectedUser}
+                        chatHistory={chatHistory}
+                        setUnRead={setUnRead}
+                    />
+                </div>
+            </div>
         </div>
     )
 }

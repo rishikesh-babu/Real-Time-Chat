@@ -8,8 +8,7 @@ export default function Layout() {
             {/* NAVBAR */}
             {/* <Navbar /> */}
             {/* MAIN CONTENT */}
-            <main className="flex-1 overflow-y-auto p-1">
-            {/* <main className="flex-1 p-1"> */}
+            <main className="flex-1 overflow-hidden">
                 <Outlet />
             </main>
 
